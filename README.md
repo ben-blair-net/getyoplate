@@ -27,28 +27,6 @@ Get Yo Plate simulates a full order flow between a customer and a restaurant own
 
 ---
 
-## Getting Started
-
-### Run locally
-
-```bash
-git clone https://github.com/ben-blair-net/getyoplate.git
-cd getyoplate
-# open index.html directly, or use a local server:
-npx serve .
-```
-
-Then open `http://localhost:3000` in your browser.
-
-### Deploy to GitHub Pages
-
-1. Fork this repo
-2. Go to **Settings → Pages**
-3. Set the source to the `main` branch, root directory
-4. Your site will be live at `https://<your-username>.github.io/getyoplate`
-
----
-
 ## Using the Demo
 
 The demo bar at the top lets you explore both sides of the app without separate accounts:
