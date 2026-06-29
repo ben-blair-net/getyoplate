@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<meta name="theme-color" content="#0C0A06"/>
+<title>Get Yo Plate — Order</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%91%3C/text%3E%3C/svg%3E"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --g:#D4A017; --gl:#EFC040; --gd:#8B6914; --bg:#0C0A06; --ck:#1C1710; --ck2:#221C10;
+    --bd:#302510; --tx:#F0EBE0; --tm:#5A5040; --ts:#9A8A6E; --grn:#22c55e; --grb:#0A2015;
+    --grt:#4ade80; --red:#ef4444; --blu:#2563eb; --field:#13100A;
+    --display:'Anton',sans-serif; --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:#060402;font-family:var(--body);color:var(--tx);-webkit-font-smoothing:antialiased}
+  body{min-height:100vh;display:flex;flex-direction:column;align-items:center}
+  button{font-family:var(--body);cursor:pointer;transition:opacity .15s,transform .08s,background .15s,border-color .15s}
+  button:active{transform:scale(.98)}
+  input,textarea,select{font-family:var(--body)}
+  input::placeholder,textarea::placeholder{color:#4A4030}
+  input:focus,textarea:focus,select:focus{border-color:var(--gd)!important;outline:none}
+  ::-webkit-scrollbar{width:0;height:0}
+
+  /* demo chrome */
+  .demobar{width:100%;max-width:430px;display:flex;align-items:center;gap:8px;padding:9px 14px;color:var(--tm);font-size:11px}
+  .demobar .seg{display:flex;background:var(--ck);border:1px solid var(--bd);border-radius:20px;padding:3px;gap:2px}
+  .demobar .seg button{border:none;background:transparent;color:var(--ts);font-size:11px;font-weight:600;padding:6px 14px;border-radius:16px;display:flex;align-items:center;gap:5px}
+  .demobar .seg button.on{background:var(--g);color:var(--bg)}
+  .demobar .reset{margin-left:auto;background:transparent;border:1px solid var(--bd);color:var(--tm);font-size:10px;padding:6px 11px;border-radius:16px;font-weight:600}
+  .demobar .reset:hover{color:var(--gl);border-color:var(--gd)}
+
+  /* phone frame */
+  .frame{width:100%;max-width:430px;flex:1;background:var(--bg);position:relative;overflow:hidden}
+  @media(min-width:520px){
+    .frame{max-width:400px;margin:6px auto 22px;border-radius:30px;border:1px solid var(--bd);min-height:760px;box-shadow:0 30px 90px -20px rgba(0,0,0,.8)}
+    body{justify-content:center;padding-top:4px}
+  }
+  .scroll{height:100%;overflow-y:auto;scroll-behavior:smooth}
+
+  .wordmark{font-family:var(--display);letter-spacing:.4px;line-height:.92;text-transform:uppercase}
+  .lbl{font-size:10px;color:var(--tm);text-transform:uppercase;letter-spacing:.09em;font-weight:600}
+  .uline{height:1px;background:var(--bd)}
+  .fadein{animation:fin .32s ease}
+  @keyframes fin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pop{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+  @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+  @keyframes bin{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:scale(1)}}
+  .bub{animation:bin .3s ease}
+  @media(prefers-reduced-motion:reduce){.fadein,.bub{animation:none}}
+
+  /* toast */
+  #toast{position:fixed;left:50%;top:64px;transform:translateX(-50%);background:var(--ck2);border:1px solid var(--gd);color:var(--gl);
+    padding:8px 18px;border-radius:11px;font-size:12px;font-weight:700;z-index:200;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .field{display:block;width:100%;background:var(--field);border:1px solid var(--bd);border-radius:10px;color:var(--tx);font-size:15px;padding:12px 13px}
+  .field.pad{padding-left:40px}
+  .field.err{border-color:#7a2a2a}
+</style>
+</head>
+<body>
+  <div class="demobar">
+    <span style="font-weight:600;letter-spacing:.04em">DEMO</span>
+    <div class="seg">
+      <button data-act="view" data-v="customer" id="vcust">📱 Customer</button>
+      <button data-act="view" data-v="owner" id="vown">👨‍🍳 Owner</button>
+    </div>
+    <button class="reset" data-act="reset">↺ Reset</button>
+  </div>
+  <div class="frame"><div class="scroll" id="app"></div></div>
+  <div id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var C={g:"#D4A017",gl:"#EFC040",gd:"#8B6914",bg:"#0C0A06",ck:"#1C1710",ck2:"#221C10",bd:"#302510",tx:"#F0EBE0",tm:"#5A5040",ts:"#9A8A6E",grn:"#22c55e",grb:"#0A2015",grt:"#4ade80",red:"#ef4444",blu:"#2563eb",field:"#13100A"};
+  var KEY="gyp_demo_v1";
+
+  function seed(){
+    return {
+      drop:{item:"Smothered Pork Chops",desc:"Fall-off-the-bone pork chops in seasoned gravy — choice of 2 sides (mac & cheese, collards, candied yams, or red beans & rice).",price:20,deadline:"2026-07-01T18:00",dropDate:"2026-07-02",maxCap:50,open:true},
+      orders:[
+        {id:101,name:"Ben",phone:"(509) 555-0142",qty:2,total:40,notes:"No onions please",status:"confirmed",time:"Mon 2:14pm"},
+        {id:102,name:"Amanda",phone:"(509) 555-0287",qty:3,total:60,notes:"",status:"paid",time:"Mon 4:45pm"},
+        {id:103,name:"Chris",phone:"(509) 555-0391",qty:1,total:20,notes:"Gluten-free sides if possible",status:"pending",time:"Tue 9:22am"},
+        {id:104,name:"Tim",phone:"(509) 555-0156",qty:4,total:80,notes:"",status:"pending",time:"Tue 11:05am"},
+        {id:105,name:"Ryan",phone:"(509) 555-0478",qty:2,total:40,notes:"Extra sauce!",status:"paid",time:"Tue 1:30pm"},
+        {id:106,name:"Mario",phone:"(509) 555-0623",qty:1,total:20,notes:"",status:"confirmed",time:"Tue 3:08pm"},
+        {id:107,name:"Isaac",phone:"(509) 555-0719",qty:2,total:40,notes:"Can I add cornbread?",status:"pending",time:"Tue 4:50pm"}
+      ]
+    };
+  }
+
+  var S={view:"customer",custScreen:"form",ownerTab:"home",smsStage:0,myId:null,draft:{name:"",phone:"",qty:1,notes:""},dropDraft:null};
+
+  function persist(){
+    var data={drop:S.drop,orders:S.orders,view:S.view,custScreen:S.custScreen,ownerTab:S.ownerTab,smsStage:S.smsStage,myId:S.myId};
+    try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}
+  }
+  function load(){
+    var sd=seed();S.drop=sd.drop;S.orders=sd.orders;
+    try{
+      var raw=localStorage.getItem(KEY);
+      if(raw){var d=JSON.parse(raw);
+        if(d.drop)S.drop=d.drop; if(d.orders)S.orders=d.orders;
+        S.view=d.view||"customer";S.custScreen=d.custScreen||"form";S.ownerTab=d.ownerTab||"home";
+        S.smsStage=d.smsStage||0;S.myId=d.myId||null;}
+    }catch(e){}
+  }
+
+  // helpers
+  function sold(){return S.orders.reduce(function(s,o){return s+o.qty;},0);}
+  function rev(st){return S.orders.filter(function(o){return o.status===st;}).reduce(function(s,o){return s+o.total;},0);}
+  function cnt(st){return S.orders.filter(function(o){return o.status===st;}).length;}
+  function myOrder(){for(var i=0;i<S.orders.length;i++)if(S.orders[i].id===S.myId)return S.orders[i];return null;}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtPhone(v){var d=v.replace(/\D/g,"").slice(0,10);if(d.length<4)return d;if(d.length<7)return "("+d.slice(0,3)+") "+d.slice(3);return "("+d.slice(0,3)+") "+d.slice(3,6)+"-"+d.slice(6);}
+  function fmtDate(iso,opt){try{return new Date(iso).toLocaleString("en-US",opt);}catch(e){return iso;}}
+  function nowStamp(){return new Date().toLocaleString("en-US",{weekday:"short",hour:"numeric",minute:"2-digit"}).replace(",","");}
+
+  var toastT;
+  function toast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show");},2400);}
+
+  // ── CUSTOMER ──
+  function viewCustomer(){
+    var d=S.drop, remaining=d.maxCap-sold();
+    if(S.custScreen==="form"){
+      if(!d.open) return closedScreen("Orders are closed","This week's drop is no longer taking orders. Follow @getyoplate on Instagram for the next one.");
+      if(remaining<=0) return closedScreen("Sold out 🔥","We're fully booked for "+fmtDate(d.dropDate+"T12:00",{weekday:"long"})+". Reply to our list to get first dibs next week.");
+      return orderForm(d,remaining);
+    }
+    if(S.custScreen==="confirm")return confirmScreen(d);
+    if(S.custScreen==="sms")return smsScreen(d);
+  }
+
+  function bioStrip(){
+    return '<div style="display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 0;background:#070502;border-bottom:1px solid '+C.bd+'">'
+      +'<span style="font-size:9px;color:'+C.tm+'">🔒 getyoplate.order · via</span>'
+      +'<span style="font-size:10px;color:'+C.ts+';font-weight:600">@getyoplate</span></div>';
+  }
+
+  function orderForm(d,remaining){
+    var dr=S.draft;
+    var lowStock=remaining<=15;
+    return bioStrip()+'<div class="fadein" style="padding:20px 18px 26px">'
+      +'<div style="text-align:center;margin-bottom:18px">'
+        +'<div style="font-size:11px;color:'+C.gd+';letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:7px">This Week\'s Drop</div>'
+        +'<div class="wordmark" style="font-size:34px;color:'+C.gl+';margin-bottom:12px">'+esc(d.item)+'</div>'
+        +'<div style="font-size:13px;color:'+C.ts+';line-height:1.55;padding:0 4px">'+esc(d.desc)+'</div>'
+      +'</div>'
+      +'<div style="display:flex;border:1px solid '+C.bd+';border-radius:12px;overflow:hidden;margin-bottom:16px">'
+        +metaCell("$"+d.price,"per plate",true)
+        +metaCell(fmtDate(d.dropDate+"T12:00",{weekday:"short"}),"pickup",false)
+        +metaCell(fmtDate(d.deadline,{weekday:"short",hour:"numeric"}).toLowerCase(),"order by",false)
+      +'</div>'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:22px;padding:9px 13px;background:'+(lowStock?"#2A1500":C.ck)+';border:1px solid '+(lowStock?"#5A3A10":C.bd)+';border-radius:10px">'
+        +'<div style="flex:1;height:5px;border-radius:3px;background:#2E2515;overflow:hidden"><div style="height:100%;width:'+Math.round(sold()/d.maxCap*100)+'%;background:'+(lowStock?C.g:C.gd)+'"></div></div>'
+        +'<div style="font-size:11px;font-weight:700;color:'+(lowStock?C.gl:C.ts)+';white-space:nowrap">'+remaining+' plates left</div>'
+      +'</div>'
+      +fieldBlock("👤 Your name","name","Tasha Marie",dr.name)
+      +fieldBlock("📱 Phone (for text updates)","phone","(509) 555-0142",dr.phone,"tel")
+      +'<div style="margin-bottom:16px"><div class="lbl" style="margin-bottom:7px">🍽️ How many plates?</div>'
+        +'<div style="display:flex;border:1px solid '+C.bd+';border-radius:10px;overflow:hidden;background:'+C.field+'">'
+          +'<button data-act="qty" data-d="-1" style="width:50px;height:48px;background:'+C.ck+';border:none;border-right:1px solid '+C.bd+';color:'+C.gl+';font-size:24px;font-weight:700">−</button>'
+          +'<div id="qtyVal" style="flex:1;text-align:center;line-height:48px;font-size:21px;font-weight:800">'+dr.qty+'</div>'
+          +'<button data-act="qty" data-d="1" style="width:50px;height:48px;background:'+C.ck+';border:none;border-left:1px solid '+C.bd+';color:'+C.gl+';font-size:24px;font-weight:700">+</button>'
+        +'</div></div>'
+      +'<div style="margin-bottom:22px"><div class="lbl" style="margin-bottom:7px">📝 Notes / dietary needs <span style="color:#3A3225;text-transform:none;letter-spacing:0;font-weight:400">· optional</span></div>'
+        +'<textarea id="f_notes" class="field" style="resize:vertical;min-height:58px;font-size:14px" placeholder="Allergies, no onions, gluten-free sides…">'+esc(dr.notes)+'</textarea></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:'+C.ck+';border:1px solid '+C.bd+';border-radius:12px;margin-bottom:13px">'
+        +'<span class="lbl">Total</span><span id="totalVal" style="font-size:27px;font-weight:800;color:'+C.gl+'">$'+(dr.qty*d.price)+'</span></div>'
+      +'<button data-act="place" id="placeBtn" style="width:100%;padding:16px;border-radius:12px;border:none;background:'+C.g+';color:'+C.bg+';font-size:15px;font-weight:800;letter-spacing:.02em">Place order →</button>'
+      +'<div style="font-size:10px;color:'+C.tm+';text-align:center;margin-top:11px;line-height:1.5">You\'ll get a text to confirm + payment instructions.<br>No payment taken on this page.</div>'
+      +'</div>';
+  }
+  function metaCell(v,l,gold){return '<div style="flex:1;text-align:center;padding:11px 4px;background:'+C.ck+';border-left:1px solid '+C.bd+'"><div style="font-size:16px;font-weight:800;color:'+(gold?C.gl:C.tx)+'">'+v+'</div><div class="lbl" style="margin-top:2px">'+l+'</div></div>';}
+  function fieldBlock(label,id,ph,val,type){return '<div style="margin-bottom:16px"><div class="lbl" style="margin-bottom:7px">'+label+'</div>'
+    +'<input id="f_'+id+'" class="field" '+(type==="tel"?'inputmode="tel"':'')+' placeholder="'+ph+'" value="'+esc(val)+'"/>'
+    +'<div id="err_'+id+'" style="font-size:10px;color:#d97a7a;margin-top:5px;display:none"></div></div>';}
+
+  function closedScreen(title,body){
+    return bioStrip()+'<div class="fadein" style="padding:60px 28px;text-align:center">'
+      +'<div style="font-size:46px;margin-bottom:18px">🍑</div>'
+      +'<div class="wordmark" style="font-size:30px;color:'+C.gl+';margin-bottom:14px">'+title+'</div>'
+      +'<div style="font-size:14px;color:'+C.ts+';line-height:1.6">'+body+'</div></div>';
+  }
+
+  function confirmScreen(d){
+    var o=myOrder();if(!o){S.custScreen="form";return viewCustomer();}
+    return bioStrip()+'<div class="fadein" style="padding:38px 22px 34px;text-align:center">'
+      +'<div style="width:72px;height:72px;border-radius:50%;background:'+C.grb+';border:2px solid '+C.grn+';display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:pop .5s ease;font-size:34px">✓</div>'
+      +'<div class="wordmark" style="font-size:26px;color:'+C.gl+';margin-bottom:9px">Order received!</div>'
+      +'<div style="font-size:14px;color:'+C.ts+';line-height:1.6;margin-bottom:24px">Thanks '+esc(o.name.split(" ")[0])+' — check your phone. We just texted <span style="color:'+C.tx+';font-weight:600">'+esc(o.phone)+'</span> with payment instructions.</div>'
+      +ticket(o,d)
+      +'<div style="background:'+C.field+';border:1px solid '+C.bd+';border-radius:11px;padding:13px 16px;font-size:12px;color:'+C.ts+';line-height:1.6;margin:0 0 20px">Pay by <b style="color:'+C.gl+'">Venmo @getyoplate</b> or <b style="color:'+C.gl+'">CashApp $getyoplat509</b>, then reply <b style="color:'+C.grt+'">PAID</b> to our text.</div>'
+      +'<button data-act="goSms" style="width:100%;padding:14px;border-radius:12px;border:1px solid '+C.gd+';background:#1C1408;color:'+C.gl+';font-size:14px;font-weight:700">💬 View your texts</button>'
+      +'</div>';
+  }
+  function ticket(o,d){
+    return '<div style="background:'+C.ck+';border:1px solid '+C.bd+';border-radius:12px;border-top:2px dashed '+C.gd+';padding:16px 18px;text-align:left;margin-bottom:18px">'
+      +'<div style="font-family:monospace;font-size:10px;color:'+C.tm+';letter-spacing:.1em;margin-bottom:10px">TICKET #'+o.id+' · '+esc(o.time||nowStamp())+'</div>'
+      +ticketRow("Item",esc(d.item))
+      +ticketRow("Plates",o.qty+" × $"+d.price)
+      +ticketRow("Pickup",fmtDate(d.dropDate+"T12:00",{weekday:"long",month:"short",day:"numeric"}))
+      +(o.notes?ticketRow("Notes",'<i style="color:'+C.ts+'">"'+esc(o.notes)+'"</i>'):"")
+      +'<div style="display:flex;justify-content:space-between;padding:10px 0 2px;margin-top:6px;border-top:1px solid '+C.bd+'"><span style="color:'+C.gl+';font-weight:700;font-size:14px">Total</span><span style="color:'+C.gl+';font-weight:800;font-size:18px">$'+o.total+'</span></div>'
+      +'</div>';
+  }
+  function ticketRow(k,v){return '<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px"><span style="color:'+C.tm+'">'+k+'</span><span style="color:'+C.tx+';font-weight:600;text-align:right;max-width:62%">'+v+'</span></div>';}
+
+  // ── SMS THREAD ──
+  function smsScreen(d){
+    var o=myOrder();if(!o){S.custScreen="form";return viewCustomer();}
+    var msgs=[];
+    msgs.push(bot("Hey "+o.name.split(" ")[0]+"! 🍑 You're in for this week's drop: "+d.item+" — $"+d.price+"/plate, pickup "+fmtDate(d.dropDate+"T12:00",{weekday:"long"})+".\n\nYou ordered "+o.qty+" plate"+(o.qty>1?"s":"")+" = $"+o.total+"."));
+    msgs.push(bot("To lock it in:\nVenmo @getyoplate or CashApp $getyoplat509 for $"+o.total+".\n\nReply PAID once you send it 👍","Payment instructions"));
+    if(S.smsStage>=1){
+      msgs.push(usr("PAID"));
+      msgs.push(bot("Got it! 🙌 You're flagged for review — confirmation coming soon. Hang tight!","Auto-reply"));
+    }
+    if(o.status==="confirmed"){
+      msgs.push(bot("You're confirmed "+o.name.split(" ")[0]+"! ✅ See you "+fmtDate(d.dropDate+"T12:00",{weekday:"long"})+" for pickup. Thanks for ordering with Get Yo Plate 🙌🔥","Owner-triggered"));
+      msgs.push(bot("Wanna hear about next week's menu first? Reply YES to join our drop list 📲","Retention opt-in"));
+    }
+    if(S.smsStage>=2){
+      msgs.push(usr("YES"));
+      msgs.push(bot("You're on the list! 🎉 You'll get first dibs every week. Talk soon!"));
+    }
+
+    var ctrl;
+    if(S.smsStage<1){
+      ctrl=smsBtn('data-act="sms" data-s="paid"',C.blu,"#0f1f3d","#7AA5F5","↑ Customer replies “PAID”");
+    }else if(o.status!=="confirmed"){
+      ctrl='<div style="text-align:center"><div style="display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:22px;border:1px dashed '+C.gd+';background:#160F02;color:'+C.gl+';font-size:12px;font-weight:600">'
+        +'<span style="width:7px;height:7px;border-radius:50%;background:'+C.g+';animation:blip 1.4s ease-in-out infinite"></span>Waiting for owner to confirm…</div>'
+        +'<button data-act="view" data-v="owner" style="display:block;width:100%;margin-top:10px;padding:11px;border-radius:22px;border:1px solid '+C.bd+';background:'+C.ck+';color:'+C.ts+';font-size:12px;font-weight:600">→ Switch to Owner view to confirm</button></div>';
+    }else if(S.smsStage<2){
+      ctrl=smsBtn('data-act="sms" data-s="yes"',C.blu,"#0f1f3d","#7AA5F5","↑ Customer replies “YES”");
+    }else{
+      ctrl='<button data-act="restartSms" style="width:100%;padding:12px;border-radius:22px;border:1px solid '+C.bd+';background:'+C.ck+';color:'+C.tm+';font-size:13px;font-weight:600">↺ Replay thread</button>';
+    }
+
+    return '<div style="background:#0A0805;border-bottom:1px solid '+C.bd+';padding:12px 16px;display:flex;align-items:center;gap:11px">'
+        +'<div style="width:38px;height:38px;border-radius:50%;background:'+C.g+';display:flex;align-items:center;justify-content:center;font-size:18px">🍑</div>'
+        +'<div><div style="font-size:14px;font-weight:700">Get Yo Plate</div><div style="font-size:11px;color:'+C.tm+'">+1 (509) 555-PLATE · auto-texts</div></div>'
+        +'<button data-act="goForm" style="margin-left:auto;background:none;border:none;color:'+C.gd+';font-size:12px;font-weight:600">← Form</button></div>'
+      +'<div id="thread" style="padding:16px 14px 8px">'+msgs.join("")+'</div>'
+      +'<div style="border-top:1px solid '+C.bd+';padding:13px 14px;background:#0A0805">'+ctrl
+        +'<div style="text-align:center;font-size:10px;color:#3A3225;margin-top:9px;letter-spacing:.04em">'+(o.status==="confirmed"&&S.smsStage>=2?"End of flow":"Live demo")+' · Twilio-powered</div></div>';
+  }
+  function smsBtn(attr,bc,bg,col,label){return '<button '+attr+' style="width:100%;padding:13px;border-radius:22px;border:1px solid '+bc+';background:'+bg+';color:'+col+';font-size:13px;font-weight:700">'+label+'</button>';}
+  function bot(text,sub){return '<div class="bub" style="display:flex;flex-direction:column;align-items:flex-start;margin-bottom:'+(sub?3:9)+'px">'
+    +'<div style="max-width:80%;padding:10px 13px;border-radius:18px;border-bottom-left-radius:5px;font-size:13.5px;line-height:1.5;white-space:pre-wrap;background:#262220;color:'+C.tx+'">'+esc(text)+'</div>'
+    +(sub?'<div style="font-size:9px;color:'+C.tm+';margin:3px 6px 9px;letter-spacing:.03em;text-transform:uppercase;font-weight:600">'+sub+'</div>':'')+'</div>';}
+  function usr(text){return '<div class="bub" style="display:flex;justify-content:flex-end;margin-bottom:9px">'
+    +'<div style="max-width:80%;padding:10px 13px;border-radius:18px;border-bottom-right-radius:5px;font-size:13.5px;line-height:1.5;background:'+C.blu+';color:#fff;font-weight:600">'+esc(text)+'</div></div>';}
+
+  // ── OWNER DASHBOARD ──
+  function viewOwner(){
+    var d=S.drop, capPct=Math.min(sold()/d.maxCap,1);
+    var head='<div style="background:'+C.bg+';border-bottom:1px solid '+C.bd+';padding:13px 16px 0;position:sticky;top:0;z-index:10">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+        +'<div><div class="wordmark" style="font-size:20px;color:'+C.gl+'">Get Yo Plate</div><div class="lbl" style="margin-top:3px">Admin Dashboard</div></div>'
+        +'<button data-act="toggleDrop" style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:20px;border:1px solid '+(d.open?C.grn:C.bd)+';background:'+(d.open?C.grb:"transparent")+';color:'+(d.open?C.grt:C.tm)+';font-size:10px;font-weight:800;letter-spacing:.07em">'
+          +'<span style="width:6px;height:6px;border-radius:50%;background:'+(d.open?C.grn:"#3A3020")+';'+(d.open?"animation:blip 2s ease-in-out infinite":"")+'"></span>'+(d.open?"OPEN":"CLOSED")+'</button>'
+      +'</div><div style="display:flex">'
+        +ownerTab("home","Overview")+ownerTab("drop","Drop")+ownerTab("orders","Orders")
+      +'</div></div>';
+
+    var body;
+    if(S.ownerTab==="home")body=ownerHome(d,capPct);
+    else if(S.ownerTab==="drop")body=ownerDrop(d,capPct);
+    else body=ownerOrders(d);
+    return head+'<div class="fadein" style="padding:14px 14px 26px">'+body+'</div>';
+  }
+  function ownerTab(key,label){var on=S.ownerTab===key;
+    return '<button data-act="ownerTab" data-t="'+key+'" style="flex:1;padding:8px 0 11px;background:none;border:none;border-bottom:2px solid '+(on?C.g:"transparent")+';color:'+(on?C.gl:C.tm)+';font-size:11px;font-weight:'+(on?700:400)+';letter-spacing:.05em;text-transform:uppercase">'+label+'</button>';}
+
+  function ownerHome(d,capPct){
+    var collected=rev("confirmed")+rev("paid");
+    return '<div style="background:'+C.ck2+';border:1px solid '+C.bd+';border-radius:13px;padding:16px;margin-bottom:10px">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div class="lbl">This Week\'s Drop</div><button data-act="ownerTab" data-t="drop" style="background:none;border:none;color:'+C.gd+';font-size:10px">Edit →</button></div>'
+        +'<div class="wordmark" style="font-size:22px;color:'+C.gl+';margin-bottom:5px">'+esc(d.item)+'</div>'
+        +'<div style="font-size:12px;color:'+C.ts+';line-height:1.5;margin-bottom:14px">'+esc(d.desc)+'</div>'
+        +'<div style="display:flex;gap:18px;margin-bottom:12px">'
+          +bigStat("$"+d.price,"per plate",C.tx)+bigStat(sold()+"/"+d.maxCap,"plates sold",C.tx)+bigStat("$"+collected,"collected",C.grt)
+        +'</div>'
+        +capBar(capPct,d)
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'
+        +miniCard("$"+rev("confirmed"),"Confirmed · "+cnt("confirmed")+" orders",C.grt)
+        +miniCard("$"+rev("paid"),"Paid · "+cnt("paid")+" waiting",C.gl)
+      +'</div>'
+      +miniCard(cnt("pending"),"Pending — awaiting payment ($"+rev("pending")+")",C.ts,true)
+      +'<button data-act="ownerTab" data-t="orders" style="width:100%;padding:13px;margin-top:8px;border-radius:11px;border:1px solid '+C.gd+';background:#1C1408;color:'+C.gl+';font-size:14px;font-weight:700">📋 View all orders</button>';
+  }
+  function bigStat(v,l,col){return '<div><div style="font-size:21px;font-weight:800;color:'+col+'">'+v+'</div><div class="lbl" style="margin-top:2px">'+l+'</div></div>';}
+  function miniCard(v,l,col,wide){return '<div style="background:'+C.ck2+';border:1px solid '+C.bd+';border-radius:11px;padding:12px 14px'+(wide?";margin-bottom:0":"")+'"><div style="font-size:22px;font-weight:800;color:'+col+'">'+v+'</div><div style="font-size:10px;color:'+C.tm+';margin-top:2px">'+l+'</div></div>';}
+  function capBar(capPct,d){var hot=capPct>.8;return '<div style="height:6px;border-radius:3px;background:#2E2515;overflow:hidden"><div style="height:100%;width:'+Math.round(capPct*100)+'%;background:'+(hot?C.red:C.g)+'"></div></div>'
+    +'<div style="font-size:10px;color:'+C.tm+';margin-top:5px">'+Math.round(capPct*100)+'% capacity · '+(d.maxCap-sold())+' plates left</div>';}
+
+  function ownerDrop(d,capPct){
+    if(S.dropDraft){
+      var dd=S.dropDraft;
+      return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-size:15px;font-weight:700">Edit drop</div>'
+        +'<div style="display:flex;gap:6px"><button data-act="cancelDrop" style="padding:7px 13px;border-radius:8px;border:1px solid '+C.bd+';background:transparent;color:'+C.ts+';font-size:12px;font-weight:700">Cancel</button>'
+        +'<button data-act="saveDrop" style="padding:7px 15px;border-radius:8px;border:none;background:'+C.g+';color:'+C.bg+';font-size:12px;font-weight:800">Save</button></div></div>'
+        +'<div style="background:'+C.ck2+';border:1px solid '+C.bd+';border-radius:13px;padding:16px">'
+          +editField("Item name","item",dd.item)
+          +editArea("Description","desc",dd.desc)
+          +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'+editField("Price ($)","price",dd.price,"number")+editField("Max plates","maxCap",dd.maxCap,"number")+'</div>'
+          +editField("Order deadline","deadline",dd.deadline,"datetime-local")
+          +editField("Drop date","dropDate",dd.dropDate,"date")
+        +'</div>';
+    }
+    return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-size:15px;font-weight:700">Weekly drop</div>'
+      +'<button data-act="editDrop" style="display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;border:1px solid '+C.bd+';background:'+C.ck2+';color:'+C.gl+';font-size:12px;font-weight:700">✎ Edit</button></div>'
+      +'<div style="background:'+C.ck2+';border:1px solid '+C.bd+';border-radius:13px;padding:16px;margin-bottom:10px">'
+        +'<div class="wordmark" style="font-size:22px;color:'+C.gl+';margin-bottom:7px">'+esc(d.item)+'</div>'
+        +'<div style="font-size:13px;color:'+C.ts+';line-height:1.55;margin-bottom:14px">'+esc(d.desc)+'</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 16px">'
+          +infoCell("Price","$"+d.price+" / plate")+infoCell("Max plates",d.maxCap)
+          +infoCell("Order deadline",fmtDate(d.deadline,{weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))
+          +infoCell("Drop day",fmtDate(d.dropDate+"T12:00",{weekday:"long",month:"short",day:"numeric"}))
+        +'</div></div>'
+      +'<div style="background:'+C.ck2+';border:1px solid '+C.bd+';border-radius:13px;padding:13px 16px;margin-bottom:10px">'
+        +'<div style="display:flex;justify-content:space-between;margin-bottom:7px"><div class="lbl">Capacity</div><div style="font-size:11px;color:'+C.ts+'">'+sold()+' / '+d.maxCap+' plates</div></div>'+capBar(capPct,d)+'</div>'
+      +'<button data-act="toggleDrop" style="width:100%;padding:14px;border-radius:11px;border:1px solid '+(d.open?C.red:C.grn)+';background:'+(d.open?"#2A0808":C.grb)+';color:'+(d.open?C.red:C.grn)+';font-size:13px;font-weight:700">'+(d.open?"🔒 Close drop — stop taking orders":"🔓 Open drop — accept orders")+'</button>';
+  }
+  function infoCell(l,v){return '<div><div class="lbl" style="margin-bottom:3px">'+l+'</div><div style="font-size:13px;font-weight:600;color:'+C.tx+'">'+v+'</div></div>';}
+  function editField(l,id,v,type){return '<div style="margin-bottom:14px"><div class="lbl" style="margin-bottom:5px">'+l+'</div><input id="dd_'+id+'" type="'+(type||"text")+'" class="field" style="font-size:13px;padding:9px 12px" value="'+esc(v)+'"/></div>';}
+  function editArea(l,id,v){return '<div style="margin-bottom:14px"><div class="lbl" style="margin-bottom:5px">'+l+'</div><textarea id="dd_'+id+'" class="field" style="font-size:13px;padding:9px 12px;resize:vertical;min-height:66px">'+esc(v)+'</textarea></div>';}
+
+  var FILTER="all";
+  function ownerOrders(d){
+    var collected=rev("confirmed")+rev("paid");
+    var filters=[["all","All",S.orders.length],["pending","Pending",cnt("pending")],["paid","Paid",cnt("paid")],["confirmed","Done",cnt("confirmed")]];
+    var chips=filters.map(function(f){var on=FILTER===f[0];
+      return '<button data-act="filter" data-f="'+f[0]+'" style="padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;background:'+(on?C.g:C.ck2)+';color:'+(on?C.bg:C.ts)+';border:1px solid '+(on?C.g:C.bd)+'">'+f[1]+' ('+f[2]+')</button>';}).join("");
+    var list=S.orders.filter(function(o){return FILTER==="all"||o.status===FILTER;});
+    var cards=list.map(function(o){return orderCard(o);}).join("");
+    if(!list.length)cards='<div style="text-align:center;padding:46px 0;color:'+C.tm+'"><div style="font-size:26px;opacity:.3;margin-bottom:10px">📋</div><div style="font-size:13px">No '+(FILTER!=="all"?FILTER:"")+' orders yet</div></div>';
+    return '<div style="margin-bottom:12px"><div style="font-size:15px;font-weight:700">Orders</div><div style="font-size:11px;color:'+C.tm+';margin-top:2px">'+S.orders.length+' total · $'+collected+' collected</div></div>'
+      +'<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">'+chips+'</div>'+cards;
+  }
+  function orderCard(o){
+    var st={pending:{l:"Pending",c:C.ts,bg:C.ck2,b:"#4A3A25"},paid:{l:"Paid",c:C.gl,bg:"#261A00",b:C.gd},confirmed:{l:"Confirmed",c:C.grt,bg:C.grb,b:C.grn}}[o.status];
+    var action="";
+    if(o.status==="pending")action='<button data-act="markPaid" data-id="'+o.id+'" style="width:100%;padding:9px;border-radius:8px;border:1px solid '+C.gd+';background:#201500;color:'+C.gl+';font-size:12px;font-weight:700">💵 Mark paid</button>';
+    else if(o.status==="paid")action='<button data-act="confirm" data-id="'+o.id+'" style="width:100%;padding:9px;border-radius:8px;border:1px solid '+C.grn+';background:'+C.grb+';color:'+C.grt+';font-size:12px;font-weight:700">📤 Confirm + send SMS</button>';
+    else action='<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:'+C.grt+';font-weight:600">✓ Confirmed · SMS sent</div>';
+    var mine=o.id===S.myId?'<span style="font-size:9px;color:'+C.gl+';background:#1A1300;border:1px solid '+C.gd+'66;border-radius:4px;padding:2px 6px;margin-left:7px;vertical-align:middle">YOUR ORDER</span>':"";
+    return '<div style="background:'+C.ck2+';border-radius:12px;margin-bottom:8px;border:1px solid '+C.bd+';border-left:3px solid '+st.b+';padding:12px 14px">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">'
+        +'<div><div style="font-size:15px;font-weight:700;line-height:1">'+esc(o.name)+mine+'</div><div style="font-size:10px;color:'+C.tm+';margin-top:3px">'+esc(o.phone)+' · '+esc(o.time||nowStamp())+'</div></div>'
+        +'<div style="font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:'+st.c+';background:'+st.bg+';border:1px solid '+st.b+'40;border-radius:4px;padding:3px 8px;white-space:nowrap">'+st.l+'</div></div>'
+      +'<div style="display:flex;gap:16px;margin-bottom:'+(o.notes?9:10)+'px"><div><span style="font-size:20px;font-weight:800">'+o.qty+'</span><span style="font-size:11px;color:'+C.tm+';margin-left:3px">plates</span></div><div><span style="font-size:20px;font-weight:800;color:'+C.gl+'">$'+o.total+'</span></div></div>'
+      +(o.notes?'<div style="padding:6px 10px;background:'+C.field+';border-radius:6px;border-left:2px solid '+C.bd+';font-size:11px;color:'+C.ts+';font-style:italic;margin-bottom:10px">"'+esc(o.notes)+'"</div>':"")
+      +action+'</div>';
+  }
+
+  // ── RENDER ──
+  function render(){
+    document.getElementById("vcust").className=S.view==="customer"?"on":"";
+    document.getElementById("vown").className=S.view==="owner"?"on":"";
+    var app=document.getElementById("app");
+    app.scrollTop=0;
+    app.innerHTML=S.view==="customer"?viewCustomer():viewOwner();
+    persist();
+  }
+
+  // capture live form input without re-render (preserve focus)
+  document.getElementById("app").addEventListener("input",function(e){
+    var id=e.target.id;
+    if(id==="f_name")S.draft.name=e.target.value;
+    else if(id==="f_phone"){var f=fmtPhone(e.target.value);e.target.value=f;S.draft.phone=f;}
+    else if(id==="f_notes")S.draft.notes=e.target.value;
+    else if(id&&id.indexOf("dd_")===0&&S.dropDraft){
+      var k=id.slice(3);S.dropDraft[k]=(k==="price"||k==="maxCap")?(+e.target.value||0):e.target.value;
+    }
+  });
+
+  // actions
+  document.body.addEventListener("click",function(e){
+    var btn=e.target.closest("[data-act]");if(!btn)return;
+    var a=btn.getAttribute("data-act"), d=S.drop;
+    switch(a){
+      case"view":S.view=btn.getAttribute("data-v");render();break;
+      case"reset":
+        try{localStorage.removeItem(KEY);}catch(err){}
+        var sd=seed();S.drop=sd.drop;S.orders=sd.orders;S.view="customer";S.custScreen="form";S.ownerTab="home";S.smsStage=0;S.myId=null;S.draft={name:"",phone:"",qty:1,notes:""};S.dropDraft=null;FILTER="all";
+        toast("Demo reset ✓");render();break;
+      case"qty":{
+        var rem=d.maxCap-sold();
+        S.draft.qty=Math.max(1,Math.min(rem,S.draft.qty+ +btn.getAttribute("data-d")));
+        document.getElementById("qtyVal").textContent=S.draft.qty;
+        document.getElementById("totalVal").textContent="$"+(S.draft.qty*d.price);
+        break;}
+      case"place":{
+        var dr=S.draft, ok=true;
+        var nameOk=dr.name.trim().length>=2, phoneOk=dr.phone.replace(/\D/g,"").length>=10;
+        toggleErr("name",nameOk?"":"Enter your name",nameOk);
+        toggleErr("phone",phoneOk?"":"Enter a 10-digit phone so we can text you",phoneOk);
+        if(!nameOk||!phoneOk)return;
+        var id=Date.now()%100000;
+        S.orders.unshift({id:id,name:dr.name.trim(),phone:dr.phone,qty:dr.qty,total:dr.qty*d.price,notes:dr.notes.trim(),status:"pending",time:nowStamp()});
+        S.myId=id;S.smsStage=0;S.custScreen="confirm";render();break;}
+      case"goSms":S.custScreen="sms";render();break;
+      case"goForm":S.custScreen="form";render();break;
+      case"sms":{
+        var s=btn.getAttribute("data-s"), o=myOrder();
+        if(s==="paid"){if(o&&o.status==="pending")o.status="paid";S.smsStage=1;}
+        if(s==="yes")S.smsStage=2;
+        render();break;}
+      case"restartSms":S.smsStage=0;{var mo=myOrder();if(mo)mo.status="pending";}render();break;
+      case"ownerTab":S.ownerTab=btn.getAttribute("data-t");if(S.ownerTab!=="drop")S.dropDraft=null;render();break;
+      case"toggleDrop":d.open=!d.open;toast(d.open?"Drop is open!":"Drop closed");render();break;
+      case"editDrop":S.dropDraft={item:d.item,desc:d.desc,price:d.price,maxCap:d.maxCap,deadline:d.deadline,dropDate:d.dropDate};render();break;
+      case"cancelDrop":S.dropDraft=null;render();break;
+      case"saveDrop":{var dd=S.dropDraft;if(dd){d.item=dd.item;d.desc=dd.desc;d.price=+dd.price||0;d.maxCap=+dd.maxCap||0;d.deadline=dd.deadline;d.dropDate=dd.dropDate;}S.dropDraft=null;toast("Drop saved ✓");render();break;}
+      case"filter":FILTER=btn.getAttribute("data-f");render();break;
+      case"markPaid":{var op=find(btn);if(op)op.status="paid";toast("Marked as paid ✓");render();break;}
+      case"confirm":{var oc=find(btn);if(oc)oc.status="confirmed";toast("📱 Confirmation SMS sent!");render();break;}
+    }
+  });
+  function find(btn){var id=+btn.getAttribute("data-id");for(var i=0;i<S.orders.length;i++)if(S.orders[i].id===id)return S.orders[i];return null;}
+  function toggleErr(id,msg,ok){var el=document.getElementById("err_"+id),inp=document.getElementById("f_"+id);if(el){el.textContent=msg;el.style.display=ok?"none":"block";}if(inp)inp.className="field"+(ok?"":" err");}
+
+  // cross-tab live sync
+  window.addEventListener("storage",function(e){if(e.key===KEY){load();render();}});
+
+  load();render();
+})();
+</script>
+</body>
+</html>
