@@ -2,440 +2,128 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="theme-color" content="#0C0A06"/>
-<title>Get Yo Plate — Order</title>
+<title>Get Yo Plate — Demo FAQ</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%91%3C/text%3E%3C/svg%3E"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root{
-    --g:#D4A017; --gl:#EFC040; --gd:#8B6914; --bg:#0C0A06; --ck:#1C1710; --ck2:#221C10;
-    --bd:#302510; --tx:#F0EBE0; --tm:#5A5040; --ts:#9A8A6E; --grn:#22c55e; --grb:#0A2015;
-    --grt:#4ade80; --red:#ef4444; --blu:#2563eb; --field:#13100A;
+    --g:#D4A017; --gl:#EFC040; --gd:#8B6914; --bg:#0C0A06; --ck:#1C1710;
+    --bd:#43331A; --tx:#F0EBE0; --tm:#8C7F65; --ts:#AE9E7F; --field:#13100A;
     --display:'Anton',sans-serif; --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:#060402;font-family:var(--body);color:var(--tx);-webkit-font-smoothing:antialiased}
-  body{min-height:100vh;display:flex;flex-direction:column;align-items:center}
-  button{font-family:var(--body);cursor:pointer;transition:opacity .15s,transform .08s,background .15s,border-color .15s}
-  button:active{transform:scale(.98)}
-  input,textarea,select{font-family:var(--body)}
-  input::placeholder,textarea::placeholder{color:#4A4030}
-  input:focus,textarea:focus,select:focus{border-color:var(--gd)!important;outline:none}
-  ::-webkit-scrollbar{width:0;height:0}
+  .wrap{max-width:640px;margin:0 auto;padding:0 20px 60px}
+  .wordmark{font-family:var(--display);letter-spacing:.4px;line-height:.95;text-transform:uppercase}
 
-  /* demo chrome */
-  .demobar{width:100%;max-width:430px;display:flex;align-items:center;gap:8px;padding:9px 14px;color:var(--tm);font-size:11px}
-  .demobar .seg{display:flex;background:var(--ck);border:1px solid var(--bd);border-radius:20px;padding:3px;gap:2px}
-  .demobar .seg button{border:none;background:transparent;color:var(--ts);font-size:11px;font-weight:600;padding:6px 14px;border-radius:16px;display:flex;align-items:center;gap:5px}
-  .demobar .seg button.on{background:var(--g);color:var(--bg)}
-  .demobar .reset{margin-left:auto;background:transparent;border:1px solid var(--bd);color:var(--tm);font-size:10px;padding:6px 11px;border-radius:16px;font-weight:600}
-  .demobar .reset:hover{color:var(--gl);border-color:var(--gd)}
+  header.top{text-align:center;padding:34px 18px 8px}
+  header.top img{display:block;margin:0 auto 14px;border-radius:50%;box-shadow:0 6px 26px rgba(212,160,23,.28)}
+  header.top .eyebrow{font-size:11px;color:var(--gd);letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+  header.top h1{font-size:30px;margin:0 0 10px;color:var(--tx)}
+  header.top p{font-size:14px;color:var(--ts);line-height:1.6;max-width:460px;margin:0 auto}
 
-  /* phone frame */
-  .frame{width:100%;max-width:430px;flex:1;background:var(--bg);position:relative;overflow:hidden}
-  @media(min-width:520px){
-    .frame{max-width:400px;margin:6px auto 22px;border-radius:30px;border:1px solid var(--bd);min-height:760px;box-shadow:0 30px 90px -20px rgba(0,0,0,.8)}
-    body{justify-content:center;padding-top:4px}
-  }
-  .scroll{height:100%;overflow-y:auto;scroll-behavior:smooth}
+  .demo-badge{display:flex;gap:10px;align-items:flex-start;margin:22px 0 30px;padding:14px 16px;background:#2A1500;border:1px solid #5A3A10;border-radius:12px;font-size:13px;color:var(--gl);line-height:1.6}
+  .demo-badge b{color:var(--gl)}
 
-  .wordmark{font-family:var(--display);letter-spacing:.4px;line-height:.92;text-transform:uppercase}
-  .lbl{font-size:10px;color:var(--tm);text-transform:uppercase;letter-spacing:.09em;font-weight:600}
-  .uline{height:1px;background:var(--bd)}
-  .fadein{animation:fin .32s ease}
-  @keyframes fin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes pop{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
-  @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
-  @keyframes bin{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:scale(1)}}
-  .bub{animation:bin .3s ease}
-  @media(prefers-reduced-motion:reduce){.fadein,.bub{animation:none}}
+  section{margin-bottom:30px}
+  .section-title{font-family:var(--display);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gd);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
 
-  /* toast */
-  #toast{position:fixed;left:50%;top:64px;transform:translateX(-50%);background:var(--ck2);border:1px solid var(--gd);color:var(--gl);
-    padding:8px 18px;border-radius:11px;font-size:12px;font-weight:700;z-index:200;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap}
-  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .item{margin-bottom:18px}
+  .q{font-size:15px;font-weight:700;color:var(--tx);margin-bottom:6px;display:flex;gap:9px}
+  .q .mark{color:var(--gl);flex-shrink:0}
+  .a{font-size:13.5px;color:var(--ts);line-height:1.65;padding-left:24px}
+  .a b{color:var(--tx)}
+  .a ul{margin:6px 0;padding-left:18px}
+  .a li{margin-bottom:4px}
+  .a .quote{display:block;margin-top:8px;padding:10px 13px;background:var(--ck);border-left:3px solid var(--gd);border-radius:8px;font-style:italic;color:var(--ts)}
+  .a .quote span{color:var(--gl);font-style:normal;font-weight:700}
 
-  .field{display:block;width:100%;background:var(--field);border:1px solid var(--bd);border-radius:10px;color:var(--tx);font-size:15px;padding:12px 13px}
-  .field.pad{padding-left:40px}
-  .field.err{border-color:#7a2a2a}
+  .highlight{margin-top:8px;padding:14px 16px;background:var(--ck);border:1px solid var(--bd);border-radius:12px;font-size:13.5px;color:var(--ts);line-height:1.6}
+  .highlight b{color:var(--gl)}
+
+  footer{text-align:center;padding:20px 0 6px;font-size:11.5px;color:var(--tm);border-top:1px solid var(--bd);margin-top:10px}
 </style>
 </head>
 <body>
-  <div class="demobar">
-    <span style="font-weight:600;letter-spacing:.04em">DEMO</span>
-    <div class="seg">
-      <button data-act="view" data-v="customer" id="vcust">📱 Customer</button>
-      <button data-act="view" data-v="owner" id="vown">👨‍🍳 Owner</button>
-    </div>
-    <button class="reset" data-act="reset">↺ Reset</button>
+<div class="wrap">
+  <header class="top">
+    <img src="data:image/jpeg;base64,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" alt="Get Yo Plate — Catering — Big Southern Flavors — Spokane, WA" width="88" height="88"/>
+    <div class="eyebrow">Tester Guide</div>
+    <h1 class="wordmark">Get Yo Plate — Demo FAQ</h1>
+    <p>Quick answers before you try the ordering demo. Takes two minutes to read, way less time to have questions about.</p>
+  </header>
+
+  <div class="demo-badge">
+    <span>⚠️</span>
+    <span><b>This is a demo.</b> No real money changes hands and no real order gets sent to Avant's kitchen. Reply "PAID" and everything after it — the payment reminders, the confirmation, the pickup date — is simulated so you can see exactly how the real thing will feel.</span>
   </div>
-  <div class="frame"><div class="scroll" id="app"></div></div>
-  <div id="toast"></div>
 
-<script>
-(function(){
-  "use strict";
-  var C={g:"#D4A017",gl:"#EFC040",gd:"#8B6914",bg:"#0C0A06",ck:"#1C1710",ck2:"#221C10",bd:"#302510",tx:"#F0EBE0",tm:"#5A5040",ts:"#9A8A6E",grn:"#22c55e",grb:"#0A2015",grt:"#4ade80",red:"#ef4444",blu:"#2563eb",field:"#13100A"};
-  var KEY="gyp_demo_v1";
+  <section>
+    <div class="section-title">Getting Started</div>
 
-  function seed(){
-    return {
-      drop:{item:"Smothered Pork Chops",desc:"Fall-off-the-bone pork chops in seasoned gravy — choice of 2 sides (mac & cheese, collards, candied yams, or red beans & rice).",price:20,deadline:"2026-07-01T18:00",dropDate:"2026-07-02",maxCap:50,open:true},
-      orders:[
-        {id:101,name:"Ben",phone:"(509) 555-0142",qty:2,total:40,notes:"No onions please",status:"confirmed",time:"Mon 2:14pm"},
-        {id:102,name:"Amanda",phone:"(509) 555-0287",qty:3,total:60,notes:"",status:"paid",time:"Mon 4:45pm"},
-        {id:103,name:"Chris",phone:"(509) 555-0391",qty:1,total:20,notes:"Gluten-free sides if possible",status:"pending",time:"Tue 9:22am"},
-        {id:104,name:"Tim",phone:"(509) 555-0156",qty:4,total:80,notes:"",status:"pending",time:"Tue 11:05am"},
-        {id:105,name:"Ryan",phone:"(509) 555-0478",qty:2,total:40,notes:"Extra sauce!",status:"paid",time:"Tue 1:30pm"},
-        {id:106,name:"Mario",phone:"(509) 555-0623",qty:1,total:20,notes:"",status:"confirmed",time:"Tue 3:08pm"},
-        {id:107,name:"Isaac",phone:"(509) 555-0719",qty:2,total:40,notes:"Can I add cornbread?",status:"pending",time:"Tue 4:50pm"}
-      ]
-    };
-  }
+    <div class="item">
+      <div class="q"><span class="mark">→</span>What am I actually testing?</div>
+      <div class="a">A preview of the ordering system Get Yo Plate will use for weekly drops — instead of DMing Avant on Instagram, you'll fill out a short order form, get a text confirmation, and "pay" (not really, see above). We want your honest reaction to how that feels.</div>
+    </div>
 
-  var S={view:"customer",custScreen:"form",ownerTab:"home",smsStage:0,myId:null,draft:{name:"",phone:"",qty:1,notes:""},dropDraft:null};
+    <div class="item">
+      <div class="q"><span class="mark">→</span>How do I place a test order?</div>
+      <div class="a">
+        <ul>
+          <li>Enter your name and phone number (used only to personalize the demo — nothing is sent anywhere)</li>
+          <li>Pick how many plates you want</li>
+          <li>Add notes or requests if you'd like — totally optional</li>
+          <li>Tap <b>Place order</b> to see your receipt</li>
+        </ul>
+      </div>
+    </div>
 
-  function persist(){
-    var data={drop:S.drop,orders:S.orders,view:S.view,custScreen:S.custScreen,ownerTab:S.ownerTab,smsStage:S.smsStage,myId:S.myId};
-    try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}
-  }
-  function load(){
-    var sd=seed();S.drop=sd.drop;S.orders=sd.orders;
-    try{
-      var raw=localStorage.getItem(KEY);
-      if(raw){var d=JSON.parse(raw);
-        if(d.drop)S.drop=d.drop; if(d.orders)S.orders=d.orders;
-        S.view=d.view||"customer";S.custScreen=d.custScreen||"form";S.ownerTab=d.ownerTab||"home";
-        S.smsStage=d.smsStage||0;S.myId=d.myId||null;}
-    }catch(e){}
-  }
+    <div class="item">
+      <div class="q"><span class="mark">→</span>What happens after I order?</div>
+      <div class="a">You'll land on a receipt, then can tap through to a simulated text thread. It walks you through payment instructions, replying "PAID," a short wait while the kitchen "confirms" you, and an optional opt-in for next week's drop list — just like the real flow will work, minus the real payment.</div>
+    </div>
+  </section>
 
-  // helpers
-  function sold(){return S.orders.reduce(function(s,o){return s+o.qty;},0);}
-  function rev(st){return S.orders.filter(function(o){return o.status===st;}).reduce(function(s,o){return s+o.total;},0);}
-  function cnt(st){return S.orders.filter(function(o){return o.status===st;}).length;}
-  function myOrder(){for(var i=0;i<S.orders.length;i++)if(S.orders[i].id===S.myId)return S.orders[i];return null;}
-  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
-  function fmtPhone(v){var d=v.replace(/\D/g,"").slice(0,10);if(d.length<4)return d;if(d.length<7)return "("+d.slice(0,3)+") "+d.slice(3);return "("+d.slice(0,3)+") "+d.slice(3,6)+"-"+d.slice(6);}
-  function fmtDate(iso,opt){try{return new Date(iso).toLocaleString("en-US",opt);}catch(e){return iso;}}
-  function nowStamp(){return new Date().toLocaleString("en-US",{weekday:"short",hour:"numeric",minute:"2-digit"}).replace(",","");}
+  <section>
+    <div class="section-title">Food &amp; Dietary Info</div>
 
-  var toastT;
-  function toast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show");},2400);}
+    <div class="item">
+      <div class="q"><span class="mark">→</span>What's the "Dietary Alerts" box?</div>
+      <div class="a">It lists the allergens in that week's dish (pork, dairy, gluten, etc.) so you know what's in your plate before you order. It's a heads-up, not a filter — it won't stop you from ordering something you're allergic to, so please read it.</div>
+    </div>
 
-  // ── CUSTOMER ──
-  function viewCustomer(){
-    var d=S.drop, remaining=d.maxCap-sold();
-    if(S.custScreen==="form"){
-      if(!d.open) return closedScreen("Orders are closed","This week's drop is no longer taking orders. Follow @getyoplate on Instagram for the next one.");
-      if(remaining<=0) return closedScreen("Sold out 🔥","We're fully booked for "+fmtDate(d.dropDate+"T12:00",{weekday:"long"})+". Reply to our list to get first dibs next week.");
-      return orderForm(d,remaining);
-    }
-    if(S.custScreen==="confirm")return confirmScreen(d);
-    if(S.custScreen==="sms")return smsScreen(d);
-  }
+    <div class="item">
+      <div class="q"><span class="mark">→</span>Can I request substitutions or changes?</div>
+      <div class="a">You can leave a note with the order, but Avant can't always accommodate it. Here's how he put it:
+        <span class="quote">"Some of this stuff just has to be made in a batch in a big pot like my Grandma taught me. Unfortunately that means I can't always accommodate dietary restrictions — I'll let you know in the dietary alerts what I can't change." <span>— Avant</span></span>
+      </div>
+    </div>
+  </section>
 
-  function bioStrip(){
-    return '<div style="display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 0;background:#070502;border-bottom:1px solid '+C.bd+'">'
-      +'<span style="font-size:9px;color:'+C.tm+'">🔒 getyoplate.order · via</span>'
-      +'<span style="font-size:10px;color:'+C.ts+';font-weight:600">@getyoplate</span></div>';
-  }
+  <section>
+    <div class="section-title">Feedback</div>
 
-  function orderForm(d,remaining){
-    var dr=S.draft;
-    var lowStock=remaining<=15;
-    return bioStrip()+'<div class="fadein" style="padding:20px 18px 26px">'
-      +'<div style="text-align:center;margin-bottom:18px">'
-        +'<div style="font-size:11px;color:'+C.gd+';letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:7px">This Week\'s Drop</div>'
-        +'<div class="wordmark" style="font-size:34px;color:'+C.gl+';margin-bottom:12px">'+esc(d.item)+'</div>'
-        +'<div style="font-size:13px;color:'+C.ts+';line-height:1.55;padding:0 4px">'+esc(d.desc)+'</div>'
-      +'</div>'
-      +'<div style="display:flex;border:1px solid '+C.bd+';border-radius:12px;overflow:hidden;margin-bottom:16px">'
-        +metaCell("$"+d.price,"per plate",true)
-        +metaCell(fmtDate(d.dropDate+"T12:00",{weekday:"short"}),"pickup",false)
-        +metaCell(fmtDate(d.deadline,{weekday:"short",hour:"numeric"}).toLowerCase(),"order by",false)
-      +'</div>'
-      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:22px;padding:9px 13px;background:'+(lowStock?"#2A1500":C.ck)+';border:1px solid '+(lowStock?"#5A3A10":C.bd)+';border-radius:10px">'
-        +'<div style="flex:1;height:5px;border-radius:3px;background:#2E2515;overflow:hidden"><div style="height:100%;width:'+Math.round(sold()/d.maxCap*100)+'%;background:'+(lowStock?C.g:C.gd)+'"></div></div>'
-        +'<div style="font-size:11px;font-weight:700;color:'+(lowStock?C.gl:C.ts)+';white-space:nowrap">'+remaining+' plates left</div>'
-      +'</div>'
-      +fieldBlock("👤 Your name","name","Tasha Marie",dr.name)
-      +fieldBlock("📱 Phone (for text updates)","phone","(509) 555-0142",dr.phone,"tel")
-      +'<div style="margin-bottom:16px"><div class="lbl" style="margin-bottom:7px">🍽️ How many plates?</div>'
-        +'<div style="display:flex;border:1px solid '+C.bd+';border-radius:10px;overflow:hidden;background:'+C.field+'">'
-          +'<button data-act="qty" data-d="-1" style="width:50px;height:48px;background:'+C.ck+';border:none;border-right:1px solid '+C.bd+';color:'+C.gl+';font-size:24px;font-weight:700">−</button>'
-          +'<div id="qtyVal" style="flex:1;text-align:center;line-height:48px;font-size:21px;font-weight:800">'+dr.qty+'</div>'
-          +'<button data-act="qty" data-d="1" style="width:50px;height:48px;background:'+C.ck+';border:none;border-left:1px solid '+C.bd+';color:'+C.gl+';font-size:24px;font-weight:700">+</button>'
-        +'</div></div>'
-      +'<div style="margin-bottom:22px"><div class="lbl" style="margin-bottom:7px">📝 Notes / dietary needs <span style="color:#3A3225;text-transform:none;letter-spacing:0;font-weight:400">· optional</span></div>'
-        +'<textarea id="f_notes" class="field" style="resize:vertical;min-height:58px;font-size:14px" placeholder="Allergies, no onions, gluten-free sides…">'+esc(dr.notes)+'</textarea></div>'
-      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:'+C.ck+';border:1px solid '+C.bd+';border-radius:12px;margin-bottom:13px">'
-        +'<span class="lbl">Total</span><span id="totalVal" style="font-size:27px;font-weight:800;color:'+C.gl+'">$'+(dr.qty*d.price)+'</span></div>'
-      +'<button data-act="place" id="placeBtn" style="width:100%;padding:16px;border-radius:12px;border:none;background:'+C.g+';color:'+C.bg+';font-size:15px;font-weight:800;letter-spacing:.02em">Place order →</button>'
-      +'<div style="font-size:10px;color:'+C.tm+';text-align:center;margin-top:11px;line-height:1.5">You\'ll get a text to confirm + payment instructions.<br>No payment taken on this page.</div>'
-      +'</div>';
-  }
-  function metaCell(v,l,gold){return '<div style="flex:1;text-align:center;padding:11px 4px;background:'+C.ck+';border-left:1px solid '+C.bd+'"><div style="font-size:16px;font-weight:800;color:'+(gold?C.gl:C.tx)+'">'+v+'</div><div class="lbl" style="margin-top:2px">'+l+'</div></div>';}
-  function fieldBlock(label,id,ph,val,type){return '<div style="margin-bottom:16px"><div class="lbl" style="margin-bottom:7px">'+label+'</div>'
-    +'<input id="f_'+id+'" class="field" '+(type==="tel"?'inputmode="tel"':'')+' placeholder="'+ph+'" value="'+esc(val)+'"/>'
-    +'<div id="err_'+id+'" style="font-size:10px;color:#d97a7a;margin-top:5px;display:none"></div></div>';}
+    <div class="item">
+      <div class="q"><span class="mark">→</span>There's a survey at the end — do I have to fill it out?</div>
+      <div class="a">No, but it helps a lot. It's three quick questions about how easy the ordering flow felt. Tapping <b>Open feedback form</b> opens a short Google Form in a new tab with your answers already filled in — just review and tap Submit. Nothing goes out until you do, and you can skip it entirely if you're short on time.</div>
+    </div>
+  </section>
 
-  function closedScreen(title,body){
-    return bioStrip()+'<div class="fadein" style="padding:60px 28px;text-align:center">'
-      +'<div style="font-size:46px;margin-bottom:18px">🍑</div>'
-      +'<div class="wordmark" style="font-size:30px;color:'+C.gl+';margin-bottom:14px">'+title+'</div>'
-      +'<div style="font-size:14px;color:'+C.ts+';line-height:1.6">'+body+'</div></div>';
-  }
+  <section>
+    <div class="highlight">
+      <b>Can't find your answer here?</b> Just reply to whoever sent you this link, or use the feedback survey at the end of the demo — happy to answer anything about the food, the flow, or the plan for the real thing.
+    </div>
+  </section>
 
-  function confirmScreen(d){
-    var o=myOrder();if(!o){S.custScreen="form";return viewCustomer();}
-    return bioStrip()+'<div class="fadein" style="padding:38px 22px 34px;text-align:center">'
-      +'<div style="width:72px;height:72px;border-radius:50%;background:'+C.grb+';border:2px solid '+C.grn+';display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:pop .5s ease;font-size:34px">✓</div>'
-      +'<div class="wordmark" style="font-size:26px;color:'+C.gl+';margin-bottom:9px">Order received!</div>'
-      +'<div style="font-size:14px;color:'+C.ts+';line-height:1.6;margin-bottom:24px">Thanks '+esc(o.name.split(" ")[0])+' — check your phone. We just texted <span style="color:'+C.tx+';font-weight:600">'+esc(o.phone)+'</span> with payment instructions.</div>'
-      +ticket(o,d)
-      +'<div style="background:'+C.field+';border:1px solid '+C.bd+';border-radius:11px;padding:13px 16px;font-size:12px;color:'+C.ts+';line-height:1.6;margin:0 0 20px">Pay by <b style="color:'+C.gl+'">Venmo @getyoplate</b> or <b style="color:'+C.gl+'">CashApp $getyoplat509</b>, then reply <b style="color:'+C.grt+'">PAID</b> to our text.</div>'
-      +'<button data-act="goSms" style="width:100%;padding:14px;border-radius:12px;border:1px solid '+C.gd+';background:#1C1408;color:'+C.gl+';font-size:14px;font-weight:700">💬 View your texts</button>'
-      +'</div>';
-  }
-  function ticket(o,d){
-    return '<div style="background:'+C.ck+';border:1px solid '+C.bd+';border-radius:12px;border-top:2px dashed '+C.gd+';padding:16px 18px;text-align:left;margin-bottom:18px">'
-      +'<div style="font-family:monospace;font-size:10px;color:'+C.tm+';letter-spacing:.1em;margin-bottom:10px">TICKET #'+o.id+' · '+esc(o.time||nowStamp())+'</div>'
-      +ticketRow("Item",esc(d.item))
-      +ticketRow("Plates",o.qty+" × $"+d.price)
-      +ticketRow("Pickup",fmtDate(d.dropDate+"T12:00",{weekday:"long",month:"short",day:"numeric"}))
-      +(o.notes?ticketRow("Notes",'<i style="color:'+C.ts+'">"'+esc(o.notes)+'"</i>'):"")
-      +'<div style="display:flex;justify-content:space-between;padding:10px 0 2px;margin-top:6px;border-top:1px solid '+C.bd+'"><span style="color:'+C.gl+';font-weight:700;font-size:14px">Total</span><span style="color:'+C.gl+';font-weight:800;font-size:18px">$'+o.total+'</span></div>'
-      +'</div>';
-  }
-  function ticketRow(k,v){return '<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:13px"><span style="color:'+C.tm+'">'+k+'</span><span style="color:'+C.tx+';font-weight:600;text-align:right;max-width:62%">'+v+'</span></div>';}
+  <section style="text-align:center">
+    <a href="customer-demo.html" style="display:inline-block;padding:15px 34px;border-radius:12px;background:var(--g);color:var(--bg);font-size:15px;font-weight:800;text-decoration:none;letter-spacing:.02em">Start the demo →</a>
+  </section>
 
-  // ── SMS THREAD ──
-  function smsScreen(d){
-    var o=myOrder();if(!o){S.custScreen="form";return viewCustomer();}
-    var msgs=[];
-    msgs.push(bot("Hey "+o.name.split(" ")[0]+"! 🍑 You're in for this week's drop: "+d.item+" — $"+d.price+"/plate, pickup "+fmtDate(d.dropDate+"T12:00",{weekday:"long"})+".\n\nYou ordered "+o.qty+" plate"+(o.qty>1?"s":"")+" = $"+o.total+"."));
-    msgs.push(bot("To lock it in:\nVenmo @getyoplate or CashApp $getyoplat509 for $"+o.total+".\n\nReply PAID once you send it 👍","Payment instructions"));
-    if(S.smsStage>=1){
-      msgs.push(usr("PAID"));
-      msgs.push(bot("Got it! 🙌 You're flagged for review — confirmation coming soon. Hang tight!","Auto-reply"));
-    }
-    if(o.status==="confirmed"){
-      msgs.push(bot("You're confirmed "+o.name.split(" ")[0]+"! ✅ See you "+fmtDate(d.dropDate+"T12:00",{weekday:"long"})+" for pickup. Thanks for ordering with Get Yo Plate 🙌🔥","Owner-triggered"));
-      msgs.push(bot("Wanna hear about next week's menu first? Reply YES to join our drop list 📲","Retention opt-in"));
-    }
-    if(S.smsStage>=2){
-      msgs.push(usr("YES"));
-      msgs.push(bot("You're on the list! 🎉 You'll get first dibs every week. Talk soon!"));
-    }
-
-    var ctrl;
-    if(S.smsStage<1){
-      ctrl=smsBtn('data-act="sms" data-s="paid"',C.blu,"#0f1f3d","#7AA5F5","↑ Customer replies “PAID”");
-    }else if(o.status!=="confirmed"){
-      ctrl='<div style="text-align:center"><div style="display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:22px;border:1px dashed '+C.gd+';background:#160F02;color:'+C.gl+';font-size:12px;font-weight:600">'
-        +'<span style="width:7px;height:7px;border-radius:50%;background:'+C.g+';animation:blip 1.4s ease-in-out infinite"></span>Waiting for owner to confirm…</div>'
-        +'<button data-act="view" data-v="owner" style="display:block;width:100%;margin-top:10px;padding:11px;border-radius:22px;border:1px solid '+C.bd+';background:'+C.ck+';color:'+C.ts+';font-size:12px;font-weight:600">→ Switch to Owner view to confirm</button></div>';
-    }else if(S.smsStage<2){
-      ctrl=smsBtn('data-act="sms" data-s="yes"',C.blu,"#0f1f3d","#7AA5F5","↑ Customer replies “YES”");
-    }else{
-      ctrl='<button data-act="restartSms" style="width:100%;padding:12px;border-radius:22px;border:1px solid '+C.bd+';background:'+C.ck+';color:'+C.tm+';font-size:13px;font-weight:600">↺ Replay thread</button>';
-    }
-
-    return '<div style="background:#0A0805;border-bottom:1px solid '+C.bd+';padding:12px 16px;display:flex;align-items:center;gap:11px">'
-        +'<div style="width:38px;height:38px;border-radius:50%;background:'+C.g+';display:flex;align-items:center;justify-content:center;font-size:18px">🍑</div>'
-        +'<div><div style="font-size:14px;font-weight:700">Get Yo Plate</div><div style="font-size:11px;color:'+C.tm+'">+1 (509) 555-PLATE · auto-texts</div></div>'
-        +'<button data-act="goForm" style="margin-left:auto;background:none;border:none;color:'+C.gd+';font-size:12px;font-weight:600">← Form</button></div>'
-      +'<div id="thread" style="padding:16px 14px 8px">'+msgs.join("")+'</div>'
-      +'<div style="border-top:1px solid '+C.bd+';padding:13px 14px;background:#0A0805">'+ctrl
-        +'<div style="text-align:center;font-size:10px;color:#3A3225;margin-top:9px;letter-spacing:.04em">'+(o.status==="confirmed"&&S.smsStage>=2?"End of flow":"Live demo")+' · Twilio-powered</div></div>';
-  }
-  function smsBtn(attr,bc,bg,col,label){return '<button '+attr+' style="width:100%;padding:13px;border-radius:22px;border:1px solid '+bc+';background:'+bg+';color:'+col+';font-size:13px;font-weight:700">'+label+'</button>';}
-  function bot(text,sub){return '<div class="bub" style="display:flex;flex-direction:column;align-items:flex-start;margin-bottom:'+(sub?3:9)+'px">'
-    +'<div style="max-width:80%;padding:10px 13px;border-radius:18px;border-bottom-left-radius:5px;font-size:13.5px;line-height:1.5;white-space:pre-wrap;background:#262220;color:'+C.tx+'">'+esc(text)+'</div>'
-    +(sub?'<div style="font-size:9px;color:'+C.tm+';margin:3px 6px 9px;letter-spacing:.03em;text-transform:uppercase;font-weight:600">'+sub+'</div>':'')+'</div>';}
-  function usr(text){return '<div class="bub" style="display:flex;justify-content:flex-end;margin-bottom:9px">'
-    +'<div style="max-width:80%;padding:10px 13px;border-radius:18px;border-bottom-right-radius:5px;font-size:13.5px;line-height:1.5;background:'+C.blu+';color:#fff;font-weight:600">'+esc(text)+'</div></div>';}
-
-  // ── OWNER DASHBOARD ──
-  function viewOwner(){
-    var d=S.drop, capPct=Math.min(sold()/d.maxCap,1);
-    var head='<div style="background:'+C.bg+';border-bottom:1px solid '+C.bd+';padding:13px 16px 0;position:sticky;top:0;z-index:10">'
-      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
-        +'<div><div class="wordmark" style="font-size:20px;color:'+C.gl+'">Get Yo Plate</div><div class="lbl" style="margin-top:3px">Admin Dashboard</div></div>'
-        +'<button data-act="toggleDrop" style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:20px;border:1px solid '+(d.open?C.grn:C.bd)+';background:'+(d.open?C.grb:"transparent")+';color:'+(d.open?C.grt:C.tm)+';font-size:10px;font-weight:800;letter-spacing:.07em">'
-          +'<span style="width:6px;height:6px;border-radius:50%;background:'+(d.open?C.grn:"#3A3020")+';'+(d.open?"animation:blip 2s ease-in-out infinite":"")+'"></span>'+(d.open?"OPEN":"CLOSED")+'</button>'
-      +'</div><div style="display:flex">'
-        +ownerTab("home","Overview")+ownerTab("drop","Drop")+ownerTab("orders","Orders")
-      +'</div></div>';
-
-    var body;
-    if(S.ownerTab==="home")body=ownerHome(d,capPct);
-    else if(S.ownerTab==="drop")body=ownerDrop(d,capPct);
-    else body=ownerOrders(d);
-    return head+'<div class="fadein" style="padding:14px 14px 26px">'+body+'</div>';
-  }
-  function ownerTab(key,label){var on=S.ownerTab===key;
-    return '<button data-act="ownerTab" data-t="'+key+'" style="flex:1;padding:8px 0 11px;background:none;border:none;border-bottom:2px solid '+(on?C.g:"transparent")+';color:'+(on?C.gl:C.tm)+';font-size:11px;font-weight:'+(on?700:400)+';letter-spacing:.05em;text-transform:uppercase">'+label+'</button>';}
-
-  function ownerHome(d,capPct){
-    var collected=rev("confirmed")+rev("paid");
-    return '<div style="background:'+C.ck2+';border:1px solid '+C.bd+';border-radius:13px;padding:16px;margin-bottom:10px">'
-        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div class="lbl">This Week\'s Drop</div><button data-act="ownerTab" data-t="drop" style="background:none;border:none;color:'+C.gd+';font-size:10px">Edit →</button></div>'
-        +'<div class="wordmark" style="font-size:22px;color:'+C.gl+';margin-bottom:5px">'+esc(d.item)+'</div>'
-        +'<div style="font-size:12px;color:'+C.ts+';line-height:1.5;margin-bottom:14px">'+esc(d.desc)+'</div>'
-        +'<div style="display:flex;gap:18px;margin-bottom:12px">'
-          +bigStat("$"+d.price,"per plate",C.tx)+bigStat(sold()+"/"+d.maxCap,"plates sold",C.tx)+bigStat("$"+collected,"collected",C.grt)
-        +'</div>'
-        +capBar(capPct,d)
-      +'</div>'
-      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'
-        +miniCard("$"+rev("confirmed"),"Confirmed · "+cnt("confirmed")+" orders",C.grt)
-        +miniCard("$"+rev("paid"),"Paid · "+cnt("paid")+" waiting",C.gl)
-      +'</div>'
-      +miniCard(cnt("pending"),"Pending — awaiting payment ($"+rev("pending")+")",C.ts,true)
-      +'<button data-act="ownerTab" data-t="orders" style="width:100%;padding:13px;margin-top:8px;border-radius:11px;border:1px solid '+C.gd+';background:#1C1408;color:'+C.gl+';font-size:14px;font-weight:700">📋 View all orders</button>';
-  }
-  function bigStat(v,l,col){return '<div><div style="font-size:21px;font-weight:800;color:'+col+'">'+v+'</div><div class="lbl" style="margin-top:2px">'+l+'</div></div>';}
-  function miniCard(v,l,col,wide){return '<div style="background:'+C.ck2+';border:1px solid '+C.bd+';border-radius:11px;padding:12px 14px'+(wide?";margin-bottom:0":"")+'"><div style="font-size:22px;font-weight:800;color:'+col+'">'+v+'</div><div style="font-size:10px;color:'+C.tm+';margin-top:2px">'+l+'</div></div>';}
-  function capBar(capPct,d){var hot=capPct>.8;return '<div style="height:6px;border-radius:3px;background:#2E2515;overflow:hidden"><div style="height:100%;width:'+Math.round(capPct*100)+'%;background:'+(hot?C.red:C.g)+'"></div></div>'
-    +'<div style="font-size:10px;color:'+C.tm+';margin-top:5px">'+Math.round(capPct*100)+'% capacity · '+(d.maxCap-sold())+' plates left</div>';}
-
-  function ownerDrop(d,capPct){
-    if(S.dropDraft){
-      var dd=S.dropDraft;
-      return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-size:15px;font-weight:700">Edit drop</div>'
-        +'<div style="display:flex;gap:6px"><button data-act="cancelDrop" style="padding:7px 13px;border-radius:8px;border:1px solid '+C.bd+';background:transparent;color:'+C.ts+';font-size:12px;font-weight:700">Cancel</button>'
-        +'<button data-act="saveDrop" style="padding:7px 15px;border-radius:8px;border:none;background:'+C.g+';color:'+C.bg+';font-size:12px;font-weight:800">Save</button></div></div>'
-        +'<div style="background:'+C.ck2+';border:1px solid '+C.bd+';border-radius:13px;padding:16px">'
-          +editField("Item name","item",dd.item)
-          +editArea("Description","desc",dd.desc)
-          +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'+editField("Price ($)","price",dd.price,"number")+editField("Max plates","maxCap",dd.maxCap,"number")+'</div>'
-          +editField("Order deadline","deadline",dd.deadline,"datetime-local")
-          +editField("Drop date","dropDate",dd.dropDate,"date")
-        +'</div>';
-    }
-    return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-size:15px;font-weight:700">Weekly drop</div>'
-      +'<button data-act="editDrop" style="display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;border:1px solid '+C.bd+';background:'+C.ck2+';color:'+C.gl+';font-size:12px;font-weight:700">✎ Edit</button></div>'
-      +'<div style="background:'+C.ck2+';border:1px solid '+C.bd+';border-radius:13px;padding:16px;margin-bottom:10px">'
-        +'<div class="wordmark" style="font-size:22px;color:'+C.gl+';margin-bottom:7px">'+esc(d.item)+'</div>'
-        +'<div style="font-size:13px;color:'+C.ts+';line-height:1.55;margin-bottom:14px">'+esc(d.desc)+'</div>'
-        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 16px">'
-          +infoCell("Price","$"+d.price+" / plate")+infoCell("Max plates",d.maxCap)
-          +infoCell("Order deadline",fmtDate(d.deadline,{weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))
-          +infoCell("Drop day",fmtDate(d.dropDate+"T12:00",{weekday:"long",month:"short",day:"numeric"}))
-        +'</div></div>'
-      +'<div style="background:'+C.ck2+';border:1px solid '+C.bd+';border-radius:13px;padding:13px 16px;margin-bottom:10px">'
-        +'<div style="display:flex;justify-content:space-between;margin-bottom:7px"><div class="lbl">Capacity</div><div style="font-size:11px;color:'+C.ts+'">'+sold()+' / '+d.maxCap+' plates</div></div>'+capBar(capPct,d)+'</div>'
-      +'<button data-act="toggleDrop" style="width:100%;padding:14px;border-radius:11px;border:1px solid '+(d.open?C.red:C.grn)+';background:'+(d.open?"#2A0808":C.grb)+';color:'+(d.open?C.red:C.grn)+';font-size:13px;font-weight:700">'+(d.open?"🔒 Close drop — stop taking orders":"🔓 Open drop — accept orders")+'</button>';
-  }
-  function infoCell(l,v){return '<div><div class="lbl" style="margin-bottom:3px">'+l+'</div><div style="font-size:13px;font-weight:600;color:'+C.tx+'">'+v+'</div></div>';}
-  function editField(l,id,v,type){return '<div style="margin-bottom:14px"><div class="lbl" style="margin-bottom:5px">'+l+'</div><input id="dd_'+id+'" type="'+(type||"text")+'" class="field" style="font-size:13px;padding:9px 12px" value="'+esc(v)+'"/></div>';}
-  function editArea(l,id,v){return '<div style="margin-bottom:14px"><div class="lbl" style="margin-bottom:5px">'+l+'</div><textarea id="dd_'+id+'" class="field" style="font-size:13px;padding:9px 12px;resize:vertical;min-height:66px">'+esc(v)+'</textarea></div>';}
-
-  var FILTER="all";
-  function ownerOrders(d){
-    var collected=rev("confirmed")+rev("paid");
-    var filters=[["all","All",S.orders.length],["pending","Pending",cnt("pending")],["paid","Paid",cnt("paid")],["confirmed","Done",cnt("confirmed")]];
-    var chips=filters.map(function(f){var on=FILTER===f[0];
-      return '<button data-act="filter" data-f="'+f[0]+'" style="padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;background:'+(on?C.g:C.ck2)+';color:'+(on?C.bg:C.ts)+';border:1px solid '+(on?C.g:C.bd)+'">'+f[1]+' ('+f[2]+')</button>';}).join("");
-    var list=S.orders.filter(function(o){return FILTER==="all"||o.status===FILTER;});
-    var cards=list.map(function(o){return orderCard(o);}).join("");
-    if(!list.length)cards='<div style="text-align:center;padding:46px 0;color:'+C.tm+'"><div style="font-size:26px;opacity:.3;margin-bottom:10px">📋</div><div style="font-size:13px">No '+(FILTER!=="all"?FILTER:"")+' orders yet</div></div>';
-    return '<div style="margin-bottom:12px"><div style="font-size:15px;font-weight:700">Orders</div><div style="font-size:11px;color:'+C.tm+';margin-top:2px">'+S.orders.length+' total · $'+collected+' collected</div></div>'
-      +'<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">'+chips+'</div>'+cards;
-  }
-  function orderCard(o){
-    var st={pending:{l:"Pending",c:C.ts,bg:C.ck2,b:"#4A3A25"},paid:{l:"Paid",c:C.gl,bg:"#261A00",b:C.gd},confirmed:{l:"Confirmed",c:C.grt,bg:C.grb,b:C.grn}}[o.status];
-    var action="";
-    if(o.status==="pending")action='<button data-act="markPaid" data-id="'+o.id+'" style="width:100%;padding:9px;border-radius:8px;border:1px solid '+C.gd+';background:#201500;color:'+C.gl+';font-size:12px;font-weight:700">💵 Mark paid</button>';
-    else if(o.status==="paid")action='<button data-act="confirm" data-id="'+o.id+'" style="width:100%;padding:9px;border-radius:8px;border:1px solid '+C.grn+';background:'+C.grb+';color:'+C.grt+';font-size:12px;font-weight:700">📤 Confirm + send SMS</button>';
-    else action='<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:'+C.grt+';font-weight:600">✓ Confirmed · SMS sent</div>';
-    var mine=o.id===S.myId?'<span style="font-size:9px;color:'+C.gl+';background:#1A1300;border:1px solid '+C.gd+'66;border-radius:4px;padding:2px 6px;margin-left:7px;vertical-align:middle">YOUR ORDER</span>':"";
-    return '<div style="background:'+C.ck2+';border-radius:12px;margin-bottom:8px;border:1px solid '+C.bd+';border-left:3px solid '+st.b+';padding:12px 14px">'
-      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">'
-        +'<div><div style="font-size:15px;font-weight:700;line-height:1">'+esc(o.name)+mine+'</div><div style="font-size:10px;color:'+C.tm+';margin-top:3px">'+esc(o.phone)+' · '+esc(o.time||nowStamp())+'</div></div>'
-        +'<div style="font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:'+st.c+';background:'+st.bg+';border:1px solid '+st.b+'40;border-radius:4px;padding:3px 8px;white-space:nowrap">'+st.l+'</div></div>'
-      +'<div style="display:flex;gap:16px;margin-bottom:'+(o.notes?9:10)+'px"><div><span style="font-size:20px;font-weight:800">'+o.qty+'</span><span style="font-size:11px;color:'+C.tm+';margin-left:3px">plates</span></div><div><span style="font-size:20px;font-weight:800;color:'+C.gl+'">$'+o.total+'</span></div></div>'
-      +(o.notes?'<div style="padding:6px 10px;background:'+C.field+';border-radius:6px;border-left:2px solid '+C.bd+';font-size:11px;color:'+C.ts+';font-style:italic;margin-bottom:10px">"'+esc(o.notes)+'"</div>':"")
-      +action+'</div>';
-  }
-
-  // ── RENDER ──
-  function render(){
-    document.getElementById("vcust").className=S.view==="customer"?"on":"";
-    document.getElementById("vown").className=S.view==="owner"?"on":"";
-    var app=document.getElementById("app");
-    app.scrollTop=0;
-    app.innerHTML=S.view==="customer"?viewCustomer():viewOwner();
-    persist();
-  }
-
-  // capture live form input without re-render (preserve focus)
-  document.getElementById("app").addEventListener("input",function(e){
-    var id=e.target.id;
-    if(id==="f_name")S.draft.name=e.target.value;
-    else if(id==="f_phone"){var f=fmtPhone(e.target.value);e.target.value=f;S.draft.phone=f;}
-    else if(id==="f_notes")S.draft.notes=e.target.value;
-    else if(id&&id.indexOf("dd_")===0&&S.dropDraft){
-      var k=id.slice(3);S.dropDraft[k]=(k==="price"||k==="maxCap")?(+e.target.value||0):e.target.value;
-    }
-  });
-
-  // actions
-  document.body.addEventListener("click",function(e){
-    var btn=e.target.closest("[data-act]");if(!btn)return;
-    var a=btn.getAttribute("data-act"), d=S.drop;
-    switch(a){
-      case"view":S.view=btn.getAttribute("data-v");render();break;
-      case"reset":
-        try{localStorage.removeItem(KEY);}catch(err){}
-        var sd=seed();S.drop=sd.drop;S.orders=sd.orders;S.view="customer";S.custScreen="form";S.ownerTab="home";S.smsStage=0;S.myId=null;S.draft={name:"",phone:"",qty:1,notes:""};S.dropDraft=null;FILTER="all";
-        toast("Demo reset ✓");render();break;
-      case"qty":{
-        var rem=d.maxCap-sold();
-        S.draft.qty=Math.max(1,Math.min(rem,S.draft.qty+ +btn.getAttribute("data-d")));
-        document.getElementById("qtyVal").textContent=S.draft.qty;
-        document.getElementById("totalVal").textContent="$"+(S.draft.qty*d.price);
-        break;}
-      case"place":{
-        var dr=S.draft, ok=true;
-        var nameOk=dr.name.trim().length>=2, phoneOk=dr.phone.replace(/\D/g,"").length>=10;
-        toggleErr("name",nameOk?"":"Enter your name",nameOk);
-        toggleErr("phone",phoneOk?"":"Enter a 10-digit phone so we can text you",phoneOk);
-        if(!nameOk||!phoneOk)return;
-        var id=Date.now()%100000;
-        S.orders.unshift({id:id,name:dr.name.trim(),phone:dr.phone,qty:dr.qty,total:dr.qty*d.price,notes:dr.notes.trim(),status:"pending",time:nowStamp()});
-        S.myId=id;S.smsStage=0;S.custScreen="confirm";render();break;}
-      case"goSms":S.custScreen="sms";render();break;
-      case"goForm":S.custScreen="form";render();break;
-      case"sms":{
-        var s=btn.getAttribute("data-s"), o=myOrder();
-        if(s==="paid"){if(o&&o.status==="pending")o.status="paid";S.smsStage=1;}
-        if(s==="yes")S.smsStage=2;
-        render();break;}
-      case"restartSms":S.smsStage=0;{var mo=myOrder();if(mo)mo.status="pending";}render();break;
-      case"ownerTab":S.ownerTab=btn.getAttribute("data-t");if(S.ownerTab!=="drop")S.dropDraft=null;render();break;
-      case"toggleDrop":d.open=!d.open;toast(d.open?"Drop is open!":"Drop closed");render();break;
-      case"editDrop":S.dropDraft={item:d.item,desc:d.desc,price:d.price,maxCap:d.maxCap,deadline:d.deadline,dropDate:d.dropDate};render();break;
-      case"cancelDrop":S.dropDraft=null;render();break;
-      case"saveDrop":{var dd=S.dropDraft;if(dd){d.item=dd.item;d.desc=dd.desc;d.price=+dd.price||0;d.maxCap=+dd.maxCap||0;d.deadline=dd.deadline;d.dropDate=dd.dropDate;}S.dropDraft=null;toast("Drop saved ✓");render();break;}
-      case"filter":FILTER=btn.getAttribute("data-f");render();break;
-      case"markPaid":{var op=find(btn);if(op)op.status="paid";toast("Marked as paid ✓");render();break;}
-      case"confirm":{var oc=find(btn);if(oc)oc.status="confirmed";toast("📱 Confirmation SMS sent!");render();break;}
-    }
-  });
-  function find(btn){var id=+btn.getAttribute("data-id");for(var i=0;i<S.orders.length;i++)if(S.orders[i].id===id)return S.orders[i];return null;}
-  function toggleErr(id,msg,ok){var el=document.getElementById("err_"+id),inp=document.getElementById("f_"+id);if(el){el.textContent=msg;el.style.display=ok?"none":"block";}if(inp)inp.className="field"+(ok?"":" err");}
-
-  // cross-tab live sync
-  window.addEventListener("storage",function(e){if(e.key===KEY){load();render();}});
-
-  load();render();
-})();
-</script>
+  <footer>This is a demo built to collect feedback before the real thing goes live. Thanks for testing!</footer>
+</div>
 </body>
 </html>
